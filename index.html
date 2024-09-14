@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .login-page, .welcome-page {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+        .welcome-message {
+            color: purple;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: purple;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #g_id_onload {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+    <!-- صفحة تسجيل الدخول -->
+    <div class="login-page visible" id="loginPage">
+        <h2>تسجيل الدخول</h2>
+        <input type="text" id="identity" placeholder="الهوية"><br><br>
+        <input type="text" id="name" placeholder="الأسم"><br><br>
+        <button onclick="validateLogin()">تسجيل الدخول</button>
+
+        <!-- زر تسجيل الدخول عبر قوقل -->
+        <div id="g_id_onload"
+             data-client_id="YOUR_GOOGLE_CLIENT_ID"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+    </div>
+
+    <!-- الصفحة الرئيسية -->
+    <div class="welcome-page" id="welcomePage">
+        <h1 id="welcomeUser"></h1>
+        <p class="welcome-message">مرحبًا بك في موقع يرحب بك وتحت خدمتك ولأنك غالي علي جربت هالتجربة وأتمنى تعطيني رايك</p>
+        <button class="button" onclick="goBack()">ارفع ارفع</button>
+    </div>
+
+    <script>
+        // بيانات الهوية والأسماء الصحيحة
+        const users = {
+            "1134991635": "munifB",
+            "1133870798": "munifA",
+            "1137345615": "saddamT"
+        };
+
+        function validateLogin() {
+            const identity = document.getElementById('identity').value;
+            const name = document.getElementById('name').value;
+
+            if (users[identity] === name) {
+                // عرض الصفحة الرئيسية مع رسالة ترحيب
+                document.getElementById('loginPage').classList.remove('visible');
+                document.getElementById('welcomePage').classList.add('visible');
+                document.getElementById('welcomeUser').innerText = `مرحبًا ${name}`;
+            } else {
+                alert("الهوية أو الاسم غير صحيح");
+            }
+        }
+
+        function goBack() {
+            // العودة إلى صفحة تسجيل الدخول
+            document.getElementById('welcomePage').classList.remove('visible');
+            document.getElementById('loginPage').classList.add('visible');
+            document.getElementById('identity').value = '';
+            document.getElementById('name').value = '';
+        }
+
+        // معالجة تسجيل الدخول عبر Google باستخدام Google Identity Services
+        function handleCredentialResponse(response) {
+            const data = jwt_decode(response.credential);
+            const userName = data.name;
+
+            // عرض الصفحة الرئيسية مع رسالة ترحيب باستخدام اسم المستخدم من Google
+            document.getElementById('loginPage').classList.remove('visible');
+            document.getElementById('welcomePage').classList.add('visible');
+            document.getElementById('welcomeUser').innerText = `مرحبًا ${userName}`;
+        }
+
+        // تحميل مكتبة jwt_decode لفك التشفير
+        function loadScript(url, callback){
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            if (script.readyState){  // فقط لإنترنت إكسبلورر
+                script.onreadystatechange = function(){
+                    if (script.readyState == "loaded" || script.readyState == "complete"){
+                        script.onreadystatechange = null;
+                        callback();
+                    }
+                };
+            } else {  // لجميع المتصفحات الأخرى
+                script.onload = function(){
+                    callback();
+                };
+            }
+            script.src = url;
+            document.getElementsByTagName("head")[0].appendChild(script);
+        }
+
+        // تحميل مكتبة jwt_decode لفك تشفير بيانات Google
+        loadScript("https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js", function(){
+            console.log("jwt-decode library loaded.");
+        });
+    </script>
+
+</body>
+</html>
