@@ -29,11 +29,7 @@
             border: none;
             cursor: pointer;
         }
-        #g_id_onload {
-            margin-top: 20px;
-        }
     </style>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -43,14 +39,6 @@
         <input type="text" id="identity" placeholder="الهوية"><br><br>
         <input type="text" id="name" placeholder="الأسم"><br><br>
         <button onclick="validateLogin()">تسجيل الدخول</button>
-
-        <!-- زر تسجيل الدخول عبر قوقل -->
-        <div id="g_id_onload"
-             data-client_id="YOUR_GOOGLE_CLIENT_ID"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin" data-type="standard"></div>
     </div>
 
     <!-- الصفحة الرئيسية -->
@@ -66,8 +54,9 @@
             "1134991635": "munifB",
             "1133870798": "munifA",
             "1137345615": "saddamT"
-            "225000203": "حفر الباطن"
+            "2250002039": "جامعة",
         };
+        
 
         function validateLogin() {
             const identity = document.getElementById('identity').value;
@@ -77,7 +66,7 @@
                 // عرض الصفحة الرئيسية مع رسالة ترحيب
                 document.getElementById('loginPage').classList.remove('visible');
                 document.getElementById('welcomePage').classList.add('visible');
-                document.getElementById('welcomeUser').innerText = `ارررحححبببب🥹❤️ ${name}`;
+                document.getElementById('welcomeUser').innerText = `اررررررححححببب🥹❤️❤️ ${name}`;
             } else {
                 alert("الهوية أو الاسم غير صحيح");
             }
@@ -90,42 +79,6 @@
             document.getElementById('identity').value = '';
             document.getElementById('name').value = '';
         }
-
-        // معالجة تسجيل الدخول عبر Google باستخدام Google Identity Services
-        function handleCredentialResponse(response) {
-            const data = jwt_decode(response.credential);
-            const userName = data.name;
-
-            // عرض الصفحة الرئيسية مع رسالة ترحيب باستخدام اسم المستخدم من Google
-            document.getElementById('loginPage').classList.remove('visible');
-            document.getElementById('welcomePage').classList.add('visible');
-            document.getElementById('welcomeUser').innerText = `مرحبًا ${userName}`;
-        }
-
-        // تحميل مكتبة jwt_decode لفك التشفير
-        function loadScript(url, callback){
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            if (script.readyState){  // فقط لإنترنت إكسبلورر
-                script.onreadystatechange = function(){
-                    if (script.readyState == "loaded" || script.readyState == "complete"){
-                        script.onreadystatechange = null;
-                        callback();
-                    }
-                };
-            } else {  // لجميع المتصفحات الأخرى
-                script.onload = function(){
-                    callback();
-                };
-            }
-            script.src = url;
-            document.getElementsByTagName("head")[0].appendChild(script);
-        }
-
-        // تحميل مكتبة jwt_decode لفك تشفير بيانات Google
-        loadScript("https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js", function(){
-            console.log("jwt-decode library loaded.");
-        });
     </script>
 
 </body>
